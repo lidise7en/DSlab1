@@ -5,7 +5,7 @@
 
 import java.io.Serializable;
 
-public class Message implements Serializable {
+public abstract class Message implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String src;
@@ -57,11 +57,5 @@ public class Message implements Serializable {
 		return "Message [src=" + src + ", dest=" + dest + ", kind=" + kind + ", data=" + data
 				+ ", duplicate=" + duplicate + ", seqNum=" + seqNum + "]";
 	}
-	public Message makeCopy() {
-		Message result = new Message(this.dest, this.kind, this.data);
-		result.set_source(this.src);
-		result.set_duplicate(this.duplicate);
-		result.set_seqNum(this.seqNum);
-		return result;
-	}
+	public abstract Message makeCopy();
 }
