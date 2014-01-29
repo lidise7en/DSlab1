@@ -20,4 +20,12 @@ public class VectorClockService extends ClockService {
 		}
 	}
 
+	public void addTS(String srcName) {
+		HashMap<String, Integer> map = this.getTs().getVectorClock();
+		if(map.containsKey(srcName))
+			map.put(srcName, map.get(srcName) + 1); 
+		else {
+			System.out.println("Cannot find this host's timestamp");
+		}
+	}
 }

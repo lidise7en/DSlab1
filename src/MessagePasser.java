@@ -32,8 +32,7 @@ public class MessagePasser {
 	private LinkedList<Message> recvQueue = new LinkedList<Message>(); //store all the received msg from all receive sockets
 	private HashMap<String, ObjectOutputStream> outputStreamMap = new HashMap<String, ObjectOutputStream>();
 	private Map<SocketInfo, Socket> sockets = new HashMap<SocketInfo, Socket>();
-
-
+	
 	private String configFilename;
 	private String localName;
 	private ServerSocket hostListenSocket;
@@ -41,6 +40,9 @@ public class MessagePasser {
 	private Config config;
 	private static int currSeqNum;
 	
+	private ClockService clockSer;
+
+
 	private enum RuleType {
 		SEND,
 		RECEIVE,
@@ -162,7 +164,6 @@ public class MessagePasser {
 		configFilename = configuration_filename;
 		localName = local_name;
 		currSeqNum = 1;
-		
 		try {
 			parseConfig();
 		} catch (FileNotFoundException e) {
@@ -176,6 +177,15 @@ public class MessagePasser {
 		 * We can optionally, save this info in hostSocket and hostSocketInfo
 		 * to avoid multiple lookups into the 'sockets' Map.
 		 */
+		/* for clockService */
+		this.clockSer = new LogicalClockService(new TimeStamp());
+		if(!this.config.isLogical) {
+			HashMap<String, Integer> map = this.clockSer.getTs().getVectorClock();
+			for(SocketInfo e : this.config.configuration) {
+				map.put(e.getName(), 0);
+			}
+		}
+		/* */
 		hostSocketInfo = config.getConfigSockInfo(localName);
 		if(hostSocketInfo == null) {
 			/*** ERROR ***/
@@ -260,7 +270,12 @@ public class MessagePasser {
 	}
 	
 	private void doSend(Message message) {
-		String dest = message.getDest();
+		/* fill the message with new timestamp */
+		this.clockSer.addTS(this.localName);
+		TimeStampedMessage msg = (TimeStampedMessage)message;
+		msg.setMsgTS(this.clockSer.getTs());
+		/* end fill*/
+		String dest = msg.getDest();
 		Socket sendSock = null;
 		for(SocketInfo inf : sockets.keySet()) {
 			if(inf.getName().equals(dest)) {
@@ -297,7 +312,7 @@ public class MessagePasser {
 		try {
 			out = outputStreamMap.get(dest);
 			
-			out.writeObject(message);
+			out.writeObject(msg);
 			out.flush();
 			
 		} catch (SocketException e1) {
@@ -318,6 +333,11 @@ public class MessagePasser {
 		synchronized(recvQueue) {
 			if(!recvQueue.isEmpty()) {
 				Message popMsg = recvQueue.remove();
+				/* add ClockService */
+				TimeStampedMessage msg = (TimeStampedMessage)popMsg;
+				this.clockSer.updateTS(msg.getMsgTS());
+				this.clockSer.addTS(this.localName);
+				/* */
 				return popMsg;
 			}
 		}
@@ -399,6 +419,14 @@ public class MessagePasser {
 		for(Map.Entry<String, ObjectOutputStream> entry : outputStreamMap.entrySet()) {
 			entry.getValue().close();
 		}
+	}
+	
+	public ClockService getClockSer() {
+		return clockSer;
+	}
+
+	public void setClockSer(ClockService clockSer) {
+		this.clockSer = clockSer;
 	}
 	
 	@Override

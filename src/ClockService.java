@@ -14,4 +14,5 @@ public abstract class ClockService {
 	}
 	
 	public abstract void updateTS(TimeStamp ts);
+	public abstract void addTS(String srcName);
 }

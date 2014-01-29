@@ -47,7 +47,7 @@ public class CmdTool {
             else if (!cmdInput.equals(null) && !cmdInput.equals("\n")) {
             	String[] array = cmdInput.split(" ");
             	if(array.length == 3)
-            		this.msgPasser.send(new Message(array[0], array[1], array[2]));
+            		this.msgPasser.send(new TimeStampedMessage(array[0], array[1], array[2], null));
             	else if(cmdInput.equals("receive")) {
             		msg = this.msgPasser.receive();
             		if(msg == null) {

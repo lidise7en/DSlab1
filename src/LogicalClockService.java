@@ -15,4 +15,8 @@ public class LogicalClockService extends ClockService {
 		
 	}
 	
+	public void addTS(String srcName) {
+		TimeStamp ts = this.getTs();
+		ts.setLamportClock(ts.getLamportClock() + 1);
+	}
 }
