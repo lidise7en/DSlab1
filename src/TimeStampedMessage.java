@@ -1,7 +1,5 @@
 
-public class TimeStampedMessage extends Message{
-
-
+public class TimeStampedMessage extends Message {
 
 	private TimeStamp msgTS = null;
 	
@@ -18,11 +16,20 @@ public class TimeStampedMessage extends Message{
 	public void setMsgTS(TimeStamp msgTS) {
 		this.msgTS = msgTS;
 	}
+	
 	public Message makeCopy() {
 		Message result = new TimeStampedMessage(this.getDest(), this.getKind(), this.getData(), this.msgTS);
 		result.set_source(this.getSrc());
 		result.set_duplicate(this.isDuplicate());
 		result.set_seqNum(this.getSeqNum());
 		return result;
+	}
+	
+	public void dumpMsg(){
+		System.out.println("Msg: src: " + super.getSrc());
+		System.out.println("Msg: dest: " + super.getDest());
+		System.out.println("Msg: Kind: " + super.getKind());
+		System.out.println("Msg: seqnum: " + super.getSeqNum());
+		System.out.println("Msg: data:  " + super.getData());
 	}
 }
