@@ -13,6 +13,16 @@ public class LoggedMessage {
 		this.msg = inputMsg;
 	}
 	
+	public TimeStampedMessage getTSMsg()
+	{
+		return this.msg;
+	}
+	
+	public ArrayList<LoggedMessage> getNextMsgs()
+	{
+		return this.nextMsgs;
+	}
+	
 	public void dumpLoggedMsg()
 	{
 		System.out.println("\t\tMSG DUMP START\n");

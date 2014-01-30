@@ -31,10 +31,11 @@ public class Logger implements Runnable {
 		receiverThread.start();
 	}
 	
-	private void addNewMsg(TimeStampedMessage msg) {
+	@SuppressWarnings("unchecked")
+	private void logNewEvent(TimeStampedMessage msg) {
 		
 		String src;
-		ArrayList eventList = null;
+		ArrayList<LoggedMessage> eventList = null;
 		LoggedMessage newLoggedMsg = new LoggedMessage(msg);
 		src = msg.getSrc();
 		
@@ -65,14 +66,73 @@ public class Logger implements Runnable {
 		System.out.println("[LOGGER]: Dump Events End");
 	}
 	
-	/*
-	private void dumpLoggedMsgs() {
-		for (LoggedMessage loggedMsg : loggedMsgs) {
-			loggedMsg.dumpLoggedMsg();
-		}
-	}
-	 */
+	private void getSequence(LoggedMessage startEvent)
+	{
+		ArrayList<LoggedMessage> loggedMsgs;
+		LoggedMessage nextMsg = null;
 
+		System.out.println("[LOGGER]: Dump Events Start");
+
+		/*
+		for (Entry<String, ArrayList> mapEntry: eventMap.entrySet()) {
+			
+			nextMsg = getSequenceNextEvent(mapEntry, startEvent);
+			if (nextMsg != null) {
+				appendSequenceNextEvent(startEvent.getNextMsgs(), nextMsg);
+			}
+		}
+		*/
+		
+		System.out.println("[LOGGER]: Dump Events End");
+	}
+
+	@SuppressWarnings("unchecked")
+	private LoggedMessage getSequenceNextEvent(Entry<String, ArrayList> mapEntry, LoggedMessage curEvent)
+	{
+		LoggedMessage retMsg = null;
+		ArrayList<LoggedMessage> loggedMsgs;
+		TimeStampedMessage loggedTSMsg = null;
+		TimeStamp loggedTS = null;
+		TimeStamp curTS = curEvent.getTSMsg().getMsgTS();
+		
+		loggedMsgs = mapEntry.getValue();
+		for (LoggedMessage loggedMsg : loggedMsgs) {
+			
+			loggedTS = loggedMsg.getTSMsg().getMsgTS();
+			
+			if (curTS.compare(loggedTS) == TimeStampRelation.lessEqual) {
+				retMsg = loggedMsg;
+				break;
+			}
+		}
+		
+		return retMsg;
+	}
+	
+	private void appendSequenceNextEvent(ArrayList<LoggedMessage> nextMsgs, LoggedMessage nextMsg)
+	{	
+		TimeStamp loggedTS = null;
+		TimeStamp nextTS = nextMsg.getTSMsg().getMsgTS();
+		LoggedMessage removeMessage = null;
+		
+		for (LoggedMessage loggedMsg : nextMsgs) {
+			
+			loggedTS = loggedMsg.getTSMsg().getMsgTS();
+			if (nextTS.compare(loggedTS) == TimeStampRelation.lessEqual) {
+				removeMessage = loggedMsg;
+				break;
+			}
+		}
+		
+		if (removeMessage != null) {
+			
+			nextMsgs.remove(removeMessage);
+		}
+		
+		nextMsgs.add(nextMsg);
+		return;
+	}
+	
 	public void run() 
 	{
 		TimeStampedMessage msg = null;
@@ -82,7 +142,7 @@ public class Logger implements Runnable {
 		while (true) {
 			msg = (TimeStampedMessage)(this.msgPasser.receive());
     		if(msg != null) {
-    			this.addNewMsg(msg);
+    			this.logNewEvent(msg);
     		}
 		}
 	}

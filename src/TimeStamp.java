@@ -3,8 +3,6 @@ import java.util.HashMap;
 
 public class TimeStamp {
 	
-
-
 	private int lamportClock;
 	private HashMap<String, Integer> vectorClock = null;
 	
@@ -27,6 +25,11 @@ public class TimeStamp {
 
 	public void setVectorClock(HashMap<String, Integer> vectorClock) {
 		this.vectorClock = vectorClock;
+	}
+	
+	/* TODO: Why Vector is a hashmap? */
+	public TimeStampRelation compare(TimeStamp ts) {
+		return TimeStampRelation.lessEqual;
 	}
 	
 	@Override

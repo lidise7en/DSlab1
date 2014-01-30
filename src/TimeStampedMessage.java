@@ -31,5 +31,6 @@ public class TimeStampedMessage extends Message {
 		System.out.println("Msg: Kind: " + super.getKind());
 		System.out.println("Msg: seqnum: " + super.getSeqNum());
 		System.out.println("Msg: data:  " + super.getData());
+		System.out.println("Msg: TS:  " + msgTS.toString());
 	}
 }
