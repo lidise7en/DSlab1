@@ -25,14 +25,18 @@ public class CmdTool {
         Message msg = null;
         
         while (!cmdInput.equals("quit")) {
+        	
             System.out.print("CommandLine% ");
+            
             try {
                 cmdInput = in.readLine();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            
             if(cmdInput.equals("quit")) {
+            	
             	try {
 					this.msgPasser.closeAllSockets();
 				} catch (IOException e) {
@@ -40,30 +44,36 @@ public class CmdTool {
 					e.printStackTrace();
 				}
             	System.exit(0);
-            }
-            else if(cmdInput.equals("ps")) {
+            	
+            } else if(cmdInput.equals("ps")) {
+            	
             	System.out.println(this.msgPasser.toString());
-            }
-            else if (!cmdInput.equals(null) && !cmdInput.equals("\n")) {
+            	
+            } else if (!cmdInput.equals(null) && !cmdInput.equals("\n")) {
+            	
             	String[] array = cmdInput.split(" ");
             	if(array.length == 3)
             		this.msgPasser.send(new TimeStampedMessage(array[0], array[1], array[2], null));
+            	
             	else if(cmdInput.equals("receive")) {
+            		
             		msg = this.msgPasser.receive();
+            		
             		if(msg == null) {
+            			
             			System.out.println("Nothing to pass to Aplication!");
-            		}
-            		else {
+            			
+            		} else {
+            			
             			System.out.println("We receive");
            				System.out.println(msg.toString());
             		}
-            	}
-            	else {
+            		
+            	} else {
             		System.out.println("Invalid Command!");
             	}
             	
-            }
-            else {
+            } else {
             	System.out.println("Invalid Command!");
             }
         }

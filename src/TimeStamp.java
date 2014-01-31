@@ -27,7 +27,6 @@ public class TimeStamp {
 		this.vectorClock = vectorClock;
 	}
 	
-	/* TODO: Why Vector is a hashmap? */
 	public TimeStampRelation compare(TimeStamp ts) {
 		return TimeStampRelation.lessEqual;
 	}

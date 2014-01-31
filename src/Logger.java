@@ -72,8 +72,10 @@ public class Logger implements Runnable {
 		LoggedMessage nextMsg = null;
 
 		System.out.println("[LOGGER]: Dump Events Start");
-
+		
 		/*
+		 *  Get next level sequence form all the hash buckets.
+		 */
 		for (Entry<String, ArrayList> mapEntry: eventMap.entrySet()) {
 			
 			nextMsg = getSequenceNextEvent(mapEntry, startEvent);
@@ -81,8 +83,14 @@ public class Logger implements Runnable {
 				appendSequenceNextEvent(startEvent.getNextMsgs(), nextMsg);
 			}
 		}
-		*/
-		
+
+		/* 
+		 * Lets iterate through all the next level events to get there successors
+		 */
+		for (LoggedMessage loggedMsg: startEvent.getNextMsgs()) {
+			getSequence(loggedMsg);
+		}
+
 		System.out.println("[LOGGER]: Dump Events End");
 	}
 

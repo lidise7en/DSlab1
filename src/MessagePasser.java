@@ -177,14 +177,24 @@ public class MessagePasser {
 		 * We can optionally, save this info in hostSocket and hostSocketInfo
 		 * to avoid multiple lookups into the 'sockets' Map.
 		 */
+		
+		
 		/* for clockService */
-		this.clockSer = new LogicalClockService(new TimeStamp());
+		if (this.config.isLogical == true) {
+			this.clockSer = new LogicalClockService(new TimeStamp());
+		} else {
+			this.clockSer = new VectorClockService(new TimeStamp());
+		}
+		
 		if(!this.config.isLogical) {
+			/* TODO: Why */
 			HashMap<String, Integer> map = this.clockSer.getTs().getVectorClock();
 			for(SocketInfo e : this.config.configuration) {
 				map.put(e.getName(), 0);
 			}
 		}
+		
+		
 		/* */
 		hostSocketInfo = config.getConfigSockInfo(localName);
 		if(hostSocketInfo == null) {
