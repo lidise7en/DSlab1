@@ -150,6 +150,8 @@ public class Logger implements Runnable {
 		while (true) {
 			msg = (TimeStampedMessage)(this.msgPasser.receive());
     		if(msg != null) {
+    			System.out.println("[LOGGER]: Received a new message");
+    			msg.dumpMsg();
     			this.logNewEvent(msg);
     		}
 		}
