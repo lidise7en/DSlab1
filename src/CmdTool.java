@@ -12,8 +12,11 @@ public class CmdTool {
 	 * Command Type:
 	 * quit: quit the whole process
 	 * ps: print the information of current MessagePasser
-	 * send command: dest kind data
+	 * send command: dest <kind> <data>
+	 * send log command : log <dest> <kind> <data>
 	 * receive command: receive
+	 * receive log command : receive log
+	 * 
 	 */
 	private MessagePasser msgPasser;
 	public CmdTool(MessagePasser msgPasser) {
@@ -56,20 +59,42 @@ public class CmdTool {
             		this.msgPasser.send(new TimeStampedMessage(array[0], array[1], array[2], null));
             	
             	else if(cmdInput.equals("receive")) {
-            		
-            		msg = this.msgPasser.receive();
-            		
+            		msg = this.msgPasser.receive();		
             		if(msg == null) {
-            			
             			System.out.println("Nothing to pass to Aplication!");
-            			
             		} else {
-            			
             			System.out.println("We receive");
            				System.out.println(msg.toString());
             		}
-            		
-            	} else {
+            	} 
+            	else if(array.length == 2) {
+            		if(array[0].equals("receive") && array[1].equals("log")) {
+            			msg = this.msgPasser.receive();
+            			if(msg == null) {
+            				System.out.println("Nothing to pass to Aplication!");
+            			}
+            			else {
+            				System.out.println("We receive");
+               				System.out.println(msg.toString());
+               				this.msgPasser.logEvent(msg.toString(), this.msgPasser.getClockSer().getTs());
+            			}
+            				
+            		}
+            		else {
+            			System.out.println("Invalid Command!");
+            		}
+            	}
+            	else if(array.length == 4) {
+            		if(array[0].equals("log")) {
+            			TimeStampedMessage newMsg = new TimeStampedMessage(array[1], array[2], array[3], null);
+            			this.msgPasser.send(newMsg);
+            			this.msgPasser.logEvent(newMsg.toString(), this.msgPasser.getClockSer().getTs());
+            		}
+            		else {
+            			System.out.println("Invalid Command!");
+            		}
+            	}
+            	else {
             		System.out.println("Invalid Command!");
             	}
             	
