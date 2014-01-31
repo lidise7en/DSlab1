@@ -25,7 +25,7 @@ public class Logger implements Runnable {
 	private Logger(MessagePasser msgPasser) {
 		Thread receiverThread;
 		this.msgPasser = msgPasser;
-		
+		System.out.println("Inside Logger constructor");
 		/* Start the receiver thread */
 		receiverThread = new Thread(this, "Receiver thread");
 		receiverThread.start();
@@ -216,8 +216,10 @@ public class Logger implements Runnable {
 					"Required arguments - <Yaml config> <name of host>");
 			System.exit(0);
 		}
+		System.out.println("MAIN Logger");
 		MessagePasser msgPasser = new MessagePasser(args[0], args[1]);
-		CmdTool tool = new CmdTool(msgPasser);
-		tool.executing();
+		/* Start the receiver thread */
+		Logger logger = new Logger(msgPasser);
+		logger.executing();
 	}
 }
