@@ -88,6 +88,7 @@ public class CmdTool {
             		if(array[0].equals("log")) {
             			TimeStampedMessage newMsg = new TimeStampedMessage(array[1], array[2], array[3], null);
             			this.msgPasser.send(newMsg);
+System.out.println("send TS:" + this.msgPasser.getClockSer().getTs());
             			this.msgPasser.logEvent(newMsg.toString(), this.msgPasser.getClockSer().getTs());
             		}
             		else {

@@ -285,7 +285,7 @@ public class MessagePasser {
 		TimeStampedMessage msg = (TimeStampedMessage)message;
 		
 		/* Only for non log messages we will update the TS */
-		if (message.getKind() != "log") { 
+		if (message.getKind().equals("log")) { 
 			/* fill the message with new timestamp */
 			this.clockSer.addTS(this.localName);
 			msg.setMsgTS(this.clockSer.getTs());
