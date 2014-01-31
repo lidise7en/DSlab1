@@ -7,18 +7,21 @@
 # The local node’s name is included in this list  
 configuration :   
     - name : p1 
-      ip: 128.237.165.220   
+      ip: 128.237.208.219   
       port : 49996
     - name : p2 
-      ip : 128.237.165.220  
+      ip : 128.237.208.219  
       port : 42558   
 
     - name : p3  
-      ip : 128.237.255.175    
+      ip : 128.237.208.219    
       port : 50003  
     - name : p4
-      ip : 128.237.255.175   
+      ip : 128.237.208.219   
       port : 59877  
+    - name : logger
+      ip : 128.2.19.171
+      port : 61225
 
 sendRules :
     - action : delay
