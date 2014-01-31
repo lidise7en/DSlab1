@@ -289,6 +289,7 @@ public class MessagePasser {
 			/* fill the message with new timestamp */
 			this.clockSer.addTS(this.localName);
 			msg.setMsgTS(this.clockSer.getTs());
+System.out.println("TS add by 1");
 		}
 		
 		/* end fill*/
@@ -328,7 +329,7 @@ public class MessagePasser {
 		ObjectOutputStream out;
 		try {
 			out = outputStreamMap.get(dest);
-			
+System.out.println("msgTS in doSend" + msg.getMsgTS().toString());			
 			out.writeObject(msg);
 			out.flush();
 			
@@ -370,7 +371,7 @@ public class MessagePasser {
 		} catch (FileNotFoundException e) {
 			System.out.println("[LOG_EVENT]: reading config file failed, continuing with existing config");
 		}
-		
+System.out.println("TS entered into logEvent" + ts.toString());
 		newTsMsg = new TimeStampedMessage(loggerName, "log", msg, ts);
 		this.send(newTsMsg);
 	}
