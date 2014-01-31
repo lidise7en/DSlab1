@@ -35,6 +35,7 @@ public class MessagePasser {
 	
 	private String configFilename;
 	private String localName;
+	private String loggerName = "logger";
 	private ServerSocket hostListenSocket;
 	private SocketInfo hostSocketInfo;
 	private Config config;
@@ -280,10 +281,16 @@ public class MessagePasser {
 	}
 	
 	private void doSend(Message message) {
-		/* fill the message with new timestamp */
-		this.clockSer.addTS(this.localName);
+		
 		TimeStampedMessage msg = (TimeStampedMessage)message;
-		msg.setMsgTS(this.clockSer.getTs());
+		
+		/* Only for non log messages we will update the TS */
+		if (message.getKind() != "log") { 
+			/* fill the message with new timestamp */
+			this.clockSer.addTS(this.localName);
+			msg.setMsgTS(this.clockSer.getTs());
+		}
+		
 		/* end fill*/
 		String dest = msg.getDest();
 		Socket sendSock = null;
@@ -354,8 +361,20 @@ public class MessagePasser {
 		
 		return null;
 	}
-				
-
+	
+	public void logEvent(String msg, TimeStamp ts)
+	{
+		TimeStampedMessage newTsMsg;
+		try {
+			parseConfig();
+		} catch (FileNotFoundException e) {
+			System.out.println("[LOG_EVENT]: reading config file failed, continuing with existing config");
+		}
+		
+		newTsMsg = new TimeStampedMessage(loggerName, "log", msg, ts);
+		this.send(newTsMsg);
+	}
+	
 	public Rule matchRule(Message message, RuleType type) {
 		List<Rule> rules = null;
 		
@@ -415,7 +434,6 @@ public class MessagePasser {
 	    
 	    /* SnakeYAML will parse and populate the Config object for us */
 	    config = (Config) yaml.load(input);
-	    
 	}
 
 	public void closeAllSockets() throws IOException {
