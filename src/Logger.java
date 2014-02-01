@@ -19,7 +19,7 @@ public class Logger implements Runnable {
 	 * receive command: receive
 	 */
 	private MessagePasser msgPasser;
-	HashMap<String, ArrayList> eventMap = new HashMap<String, ArrayList>();
+	HashMap<String, ArrayList<LoggedMessage>> eventMap = new HashMap<String, ArrayList<LoggedMessage>>();
 	//private ArrayList<LoggedMessage> loggedMsgs = new ArrayList<LoggedMessage>();
 	
 	private Logger(MessagePasser msgPasser) {
@@ -55,7 +55,7 @@ public class Logger implements Runnable {
 		
 		System.out.println("[LOGGER]: Dump Events Start");
 		
-		for (Entry<String, ArrayList> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
 			System.out.println("\t key: " + mapEntry.getKey());
 			loggedMsgs = mapEntry.getValue();
 			
@@ -64,6 +64,35 @@ public class Logger implements Runnable {
 			}
 		}
 		System.out.println("[LOGGER]: Dump Events End");
+	}
+	
+	private void generateSequence()
+	{
+		ArrayList<LoggedMessage> loggedMsgs;
+		LoggedMessage firstLoggedMsg;
+
+		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+			System.out.println("\t key: " + mapEntry.getKey());
+			loggedMsgs = mapEntry.getValue();
+			
+			firstLoggedMsg = loggedMsgs.get(0);
+			getSequence(firstLoggedMsg);
+		}
+	}
+	
+	private void displaySequence()
+	{
+		ArrayList<LoggedMessage> loggedMsgs;
+		LoggedMessage firstLoggedMsg;
+
+		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+			System.out.println("\t key: " + mapEntry.getKey());
+			loggedMsgs = mapEntry.getValue();
+
+			firstLoggedMsg = loggedMsgs.get(0);
+			getSequence(firstLoggedMsg);
+		}
+		
 	}
 	
 	private void getSequence(LoggedMessage startEvent)
@@ -76,7 +105,7 @@ public class Logger implements Runnable {
 		/*
 		 *  Get next level sequence form all the hash buckets.
 		 */
-		for (Entry<String, ArrayList> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
 			
 			nextMsg = getSequenceNextEvent(mapEntry, startEvent);
 			if (nextMsg != null) {
@@ -94,8 +123,23 @@ public class Logger implements Runnable {
 		System.out.println("[LOGGER]: Dump Events End");
 	}
 
+	private void displaySequence(LoggedMessage startEvent)
+	{
+		ArrayList<LoggedMessage> loggedMsgs;
+		LoggedMessage nextMsg = null;
+		
+		startEvent.dumpLoggedMsg();
+
+		/* 
+		 * Lets iterate through all the next level events to get there successors
+		 */
+		for (LoggedMessage loggedMsg: startEvent.getNextMsgs()) {
+			displaySequence(loggedMsg);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
-	private LoggedMessage getSequenceNextEvent(Entry<String, ArrayList> mapEntry, LoggedMessage curEvent)
+	private LoggedMessage getSequenceNextEvent(Entry<String, ArrayList<LoggedMessage>> mapEntry, LoggedMessage curEvent)
 	{
 		LoggedMessage retMsg = null;
 		ArrayList<LoggedMessage> loggedMsgs;
@@ -186,9 +230,13 @@ public class Logger implements Runnable {
             	this.dumpEventMaps();
             	
             }  else if (cmdInput.equals("sequence")) {
-            	
+
+            	generateSequence();
+            	displaySequence();
+
 
             } else if (cmdInput.equals("concurrent")) {
+            	
             	this.printConcurrent();
 
             } else if (!cmdInput.equals(null) && !cmdInput.equals("\n")) {
@@ -217,7 +265,7 @@ public class Logger implements Runnable {
         }
 	}
 	
-	public void Concurrent() {
+	public void printConcurrent() {
 		for(String e : this.eventMap.keySet()) {
 			for(LoggedMessage f : this.eventMap.get(e)) {
 				TimeStamp ts = f.msg.getMsgTS();
@@ -232,6 +280,7 @@ public class Logger implements Runnable {
 			}
 		}
 	}
+	
 	public static void main(String[] args) {
 		if(args.length != 2) {
 			System.out.println("Arguments mismtach.\n" +
