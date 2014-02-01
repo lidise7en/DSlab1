@@ -273,11 +273,11 @@ public class Logger implements Runnable {
 		for(String e : this.eventMap.keySet()) {
 			for(LoggedMessage f : this.eventMap.get(e)) {
 				TimeStamp ts = f.msg.getMsgTS();
-				System.out.println(f.msg.toString() + " " + "concurrent message : ");
+				System.out.println(f.msg.getMsgTS().toString() + " " + "concurrent message : ");
 				for(String str : this.eventMap.keySet()) {
 					for(LoggedMessage lm : this.eventMap.get(str)) {
 						if(ts.compare(lm.msg.getMsgTS()) == TimeStampRelation.concurrent) {
-							System.out.println(lm.msg.toString());
+							System.out.println(lm.msg.getMsgTS().toString());
 						}
 					}
 				}

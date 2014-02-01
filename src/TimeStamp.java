@@ -30,6 +30,7 @@ public class TimeStamp implements Serializable {
 	}
 	
 	public TimeStampRelation compare(TimeStamp ts) {
+
 		if(this.vectorClock.size() == 0) {//this is a lamport timestamp
 			if(this.lamportClock == ts.lamportClock) {
 				return TimeStampRelation.equal;
@@ -44,10 +45,12 @@ public class TimeStamp implements Serializable {
 		else {//this is a vector timestamp
 			int flag = 0;
 			for(String e : this.vectorClock.keySet()) {
-				if(this.vectorClock.get(e) == ts.getVectorClock().get(e)) {
+				int num1 = this.vectorClock.get(e);
+				int num2 = ts.getVectorClock().get(e);
+				if(num1 == num2) {
 					continue;
 				}
-				else if(this.vectorClock.get(e) > ts.getVectorClock().get(e)) {
+				else if(num1 > num2) {
 					if(flag == -1) {
 						return TimeStampRelation.concurrent;
 					}
