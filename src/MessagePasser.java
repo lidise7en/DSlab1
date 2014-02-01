@@ -35,7 +35,6 @@ public class MessagePasser {
 	
 	private String configFilename;
 
-
 	private String localName;
 	private String loggerName = "logger";
 	private ServerSocket hostListenSocket;
@@ -498,6 +497,11 @@ System.out.println("TS entered into logEvent" + ts.toString());
 				+ ", localName=" + localName + ", hostListenSocket=" + hostListenSocket
 				+ ", hostSocketInfo=" + hostSocketInfo + ", config=" + config
 				+ "]";
+	}
+	
+	public boolean getIsLogical()
+	{
+		return this.config.isLogical;
 	}
 
 }
