@@ -34,6 +34,8 @@ public class MessagePasser {
 	private Map<SocketInfo, Socket> sockets = new HashMap<SocketInfo, Socket>();
 	
 	private String configFilename;
+
+
 	private String localName;
 	private String loggerName = "logger";
 	private ServerSocket hostListenSocket;
@@ -82,8 +84,8 @@ public class MessagePasser {
 				ObjectInputStream in = new ObjectInputStream(this.LisSock.getInputStream());
 
 				while(true) {
-					Message msg = (Message)in.readObject();
-
+					TimeStampedMessage msg = (TimeStampedMessage)in.readObject();
+//msg.dumpMsg();
 					parseConfig();
 					Rule rule = null;
 					if((rule = matchRule(msg, RuleType.RECEIVE)) != null) {
@@ -288,7 +290,7 @@ public class MessagePasser {
 		if (!message.getKind().equals("log")) { 
 			/* fill the message with new timestamp */
 			this.clockSer.addTS(this.localName);
-			msg.setMsgTS(this.clockSer.getTs());
+			msg.setMsgTS(this.clockSer.getTs().makeCopy());
 System.out.println("TS add by 1");
 		}
 		
@@ -458,6 +460,13 @@ System.out.println("TS entered into logEvent" + ts.toString());
 		this.clockSer = clockSer;
 	}
 	
+	public String getLocalName() {
+		return localName;
+	}
+
+	public void setLocalName(String localName) {
+		this.localName = localName;
+	}
 	@Override
 	public String toString() {
 		return "MessagePasser [configFilename=" + configFilename

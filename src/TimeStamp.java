@@ -81,7 +81,12 @@ public class TimeStamp implements Serializable {
 		}
 		
 	}
-	
+	public TimeStamp makeCopy() {
+		TimeStamp result = new TimeStamp();
+		result.setLamportClock(this.lamportClock);
+		result.setVectorClock((HashMap<String, Integer>)this.vectorClock.clone());
+		return result;
+	}
 	@Override
 	public String toString() {
 		return "TimeStamp [lamportClock=" + lamportClock + ", vectorClock="

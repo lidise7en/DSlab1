@@ -6,6 +6,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 public class CmdTool {
 	/*
@@ -64,7 +65,7 @@ public class CmdTool {
             			System.out.println("Nothing to pass to Aplication!");
             		} else {
             			System.out.println("We receive");
-           				System.out.println(msg.toString());
+((TimeStampedMessage)msg).dumpMsg();
             		}
             	} 
             	else if(array.length == 2) {
@@ -75,10 +76,14 @@ public class CmdTool {
             			}
             			else {
             				System.out.println("We receive");
-               				System.out.println(msg.toString());
-               				this.msgPasser.logEvent(msg.toString(), this.msgPasser.getClockSer().getTs());
+((TimeStampedMessage)msg).dumpMsg();
+               				this.msgPasser.logEvent(msg.toString(), this.msgPasser.getClockSer().getTs().makeCopy());
             			}
             				
+            		}
+            		else if(array[0].equals("event")) {
+            			this.msgPasser.getClockSer().addTS(this.msgPasser.getLocalName());
+            			this.msgPasser.logEvent(array[1], this.msgPasser.getClockSer().getTs().makeCopy());
             		}
             		else {
             			System.out.println("Invalid Command!");
@@ -89,7 +94,7 @@ public class CmdTool {
             			TimeStampedMessage newMsg = new TimeStampedMessage(array[1], array[2], array[3], null);
             			this.msgPasser.send(newMsg);
 System.out.println("send TS:" + this.msgPasser.getClockSer().getTs());
-            			this.msgPasser.logEvent(newMsg.toString(), this.msgPasser.getClockSer().getTs());
+            			this.msgPasser.logEvent(newMsg.toString(), this.msgPasser.getClockSer().getTs().makeCopy());
             		}
             		else {
             			System.out.println("Invalid Command!");
