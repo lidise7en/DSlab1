@@ -37,4 +37,9 @@ public class LoggedMessage {
 		
 		System.out.println("\t\tMSG DUMP END\n");
 	}
+	
+	public String toString()
+	{
+		return (this.msg.getMsgTS().toString() + this.msg.getData().toString());
+	}
 }

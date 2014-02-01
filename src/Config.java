@@ -11,7 +11,7 @@ public class Config {
 	List<SocketInfo> configuration;
 	List<Rule> sendRules;
 	List<Rule> receiveRules;
-	boolean isLogical = true;
+	boolean isLogical = false;
 	public Config() {
 	}
 	

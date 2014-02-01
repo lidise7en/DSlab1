@@ -33,4 +33,8 @@ public class TimeStampedMessage extends Message {
 		System.out.println("Msg: data:  " + super.getData());
 		System.out.println("Msg: TS:  " + msgTS.toString());
 	}
+
+	public String toString() {
+		return (super.toString() + msgTS.toString()); 
+	}
 }
