@@ -186,10 +186,10 @@ public class Logger implements Runnable {
             	this.dumpEventMaps();
             	
             }  else if (cmdInput.equals("sequence")) {
-
+            	
 
             } else if (cmdInput.equals("concurrent")) {
-
+            	this.printConcurrent();
 
             } else if (!cmdInput.equals(null) && !cmdInput.equals("\n")) {
             	
@@ -217,7 +217,21 @@ public class Logger implements Runnable {
         }
 	}
 	
-
+	public void Concurrent() {
+		for(String e : this.eventMap.keySet()) {
+			for(LoggedMessage f : this.eventMap.get(e)) {
+				TimeStamp ts = f.msg.getMsgTS();
+				System.out.println(f.msg.toString() + " " + "concurrent message : ");
+				for(String str : this.eventMap.keySet()) {
+					for(LoggedMessage lm : this.eventMap.get(str)) {
+						if(ts.compare(lm.msg.getMsgTS()) == TimeStampRelation.concurrent) {
+							System.out.println(lm.msg.toString());
+						}
+					}
+				}
+			}
+		}
+	}
 	public static void main(String[] args) {
 		if(args.length != 2) {
 			System.out.println("Arguments mismtach.\n" +
