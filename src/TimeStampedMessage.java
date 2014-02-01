@@ -13,6 +13,10 @@ public class TimeStampedMessage extends Message {
 		return msgTS;
 	}
 
+	public String getMsg() {
+		return super.toString();
+	}
+	
 	public void setMsgTS(TimeStamp msgTS) {
 		this.msgTS = msgTS;
 	}
