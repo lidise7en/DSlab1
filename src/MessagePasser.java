@@ -190,7 +190,6 @@ public class MessagePasser {
 		}
 		
 		if(!this.config.isLogical) {
-			/* TODO: Why */
 			HashMap<String, Integer> map = this.clockSer.getTs().getVectorClock();
 			for(SocketInfo e : this.config.configuration) {
 				map.put(e.getName(), 0);
