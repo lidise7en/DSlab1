@@ -185,7 +185,13 @@ public class Logger implements Runnable {
             	
             	this.dumpEventMaps();
             	
-            }  else if (!cmdInput.equals(null) && !cmdInput.equals("\n")) {
+            }  else if (cmdInput.equals("sequence")) {
+
+
+            } else if (cmdInput.equals("concurrent")) {
+
+
+            } else if (!cmdInput.equals(null) && !cmdInput.equals("\n")) {
             	
             	String[] array = cmdInput.split(" ");
             	if(array.length == 3)
