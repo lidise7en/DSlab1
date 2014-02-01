@@ -83,7 +83,8 @@ public class TimeStamp implements Serializable {
 	}
 	public TimeStamp makeCopy() {
 		TimeStamp result = new TimeStamp();
-		result.setLamportClock(this.lamportClock);
+		int tmp = this.lamportClock;
+		result.setLamportClock(tmp);
 		result.setVectorClock((HashMap<String, Integer>)this.vectorClock.clone());
 		return result;
 	}

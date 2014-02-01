@@ -82,7 +82,9 @@ public class CmdTool {
             				
             		}
             		else if(array[0].equals("event")) {
+System.out.println("Lamport time " + this.msgPasser.getClockSer().getTs().getLamportClock());
             			this.msgPasser.getClockSer().addTS(this.msgPasser.getLocalName());
+System.out.println("Lamport time " + this.msgPasser.getClockSer().getTs().getLamportClock());
             			this.msgPasser.logEvent(array[1], this.msgPasser.getClockSer().getTs().makeCopy());
             		}
             		else {

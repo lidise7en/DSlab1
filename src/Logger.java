@@ -192,7 +192,7 @@ public class Logger implements Runnable {
 		System.out.println("[LOGGER]: Started the new thread");
 		
 		while (true) {
-			msg = (TimeStampedMessage)(this.msgPasser.receive());
+			msg = (TimeStampedMessage)(this.msgPasser.receiveLogger());
     		if(msg != null) {
     			System.out.println("[LOGGER]: Received a new message");
     			msg.dumpMsg();
@@ -245,7 +245,7 @@ public class Logger implements Runnable {
             	if(array.length == 3)
             		this.msgPasser.send(new TimeStampedMessage(array[0], array[1], array[2], null));
             	else if(cmdInput.equals("receive")) {
-            		msg = this.msgPasser.receive();
+            		msg = this.msgPasser.receiveLogger();
             		if(msg == null) {
             			System.out.println("Nothing to pass to Aplication!");
             		}

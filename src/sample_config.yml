@@ -20,7 +20,7 @@ configuration :
       ip : 128.237.208.219   
       port : 59877  
     - name : logger
-      ip : 128.2.19.171
+      ip : localhost
       port : 61225
 
 sendRules :

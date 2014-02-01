@@ -354,9 +354,35 @@ System.out.println("msgTS in doSend" + msg.getMsgTS().toString());
 				Message popMsg = recvQueue.remove();
 				/* add ClockService */
 				TimeStampedMessage msg = (TimeStampedMessage)popMsg;
+System.out.println("new Debug sentence");
+msg.dumpMsg();
 				this.clockSer.updateTS(msg.getMsgTS());
 				this.clockSer.addTS(this.localName);
 				/* */
+
+				return popMsg;
+			}
+		}
+		
+		return null;
+	}
+	public Message receiveLogger() {
+		/* Re-parse the config.
+		 * Receive the message using sockets.
+		 * Finally, check message against receiveRules.
+		 */
+		
+		synchronized(recvQueue) {
+			if(!recvQueue.isEmpty()) {
+				Message popMsg = recvQueue.remove();
+				/* add ClockService */
+				TimeStampedMessage msg = (TimeStampedMessage)popMsg;
+System.out.println("new Debug sentence");
+msg.dumpMsg();
+//				this.clockSer.updateTS(msg.getMsgTS());
+//				this.clockSer.addTS(this.localName);
+				/* */
+
 				return popMsg;
 			}
 		}
