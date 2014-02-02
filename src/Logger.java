@@ -358,7 +358,7 @@ System.out.println("[LOGGER]: Genseq key: " + mapEntry.getKey() + " DONE");
             	
             	this.dumpEventMaps();
             	
-            }  else if (cmdInput.equals("sequence")) {
+            } else if (cmdInput.equals("sequence")) {
 
             	if (this.isLogical == false) {
             		this.generateSequence();
@@ -373,7 +373,8 @@ System.out.println("[LOGGER]: Genseq key: " + mapEntry.getKey() + " DONE");
             	this.printConcurrent();
             	
             } else if (cmdInput.equals("cleanup")) {
-            	
+            	System.out.println("we clean up the logger");
+            	this.msgPasser.cleanUp();
             	this.cleanupAll();
 
             } else if (!cmdInput.equals(null) && !cmdInput.equals("\n")) {

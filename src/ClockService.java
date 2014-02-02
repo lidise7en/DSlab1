@@ -12,7 +12,9 @@ public abstract class ClockService {
 	public void setTs(TimeStamp ts) {
 		this.ts = ts;
 	}
-	
+	public void cleanUp() {
+		this.ts = new TimeStamp();
+	}
 	public abstract void updateTS(TimeStamp ts);
 	public abstract void addTS(String srcName);
 }

@@ -491,6 +491,21 @@ System.out.println("TS entered into logEvent" + ts.toString());
 	public void setLocalName(String localName) {
 		this.localName = localName;
 	}
+	
+	public void cleanUp() {
+		this.delayRecvQueue.clear();
+		this.delayRecvQueue.clear();
+		this.recvQueue.clear();
+		this.currSeqNum = 0;
+		this.clockSer.cleanUp();
+		
+		if(!this.config.isLogical) {
+			HashMap<String, Integer> map = this.clockSer.getTs().getVectorClock();
+			for(SocketInfo e : this.config.configuration) {
+				map.put(e.getName(), 0);
+			}
+		}
+	}
 	@Override
 	public String toString() {
 		return "MessagePasser [configFilename=" + configFilename

@@ -2,8 +2,8 @@ import java.util.List;
 
 
 /* 18-842 Distributed Systems
- * Lab 0
- * Group 41 - ajaltade & dil1
+ * Lab 1
+ * Group 41 - Ankur & Di 
  */
 
 public class Config {

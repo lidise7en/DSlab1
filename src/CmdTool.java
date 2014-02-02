@@ -53,7 +53,12 @@ public class CmdTool {
             	
             	System.out.println(this.msgPasser.toString());
             	
-            } else if (!cmdInput.equals(null) && !cmdInput.equals("\n")) {
+            } 
+            else if(cmdInput.equals("cleanup")) {
+            	System.out.println("we clean up the messagePasser and ClockService");
+            	this.msgPasser.cleanUp();
+            }
+            else if (!cmdInput.equals(null) && !cmdInput.equals("\n")) {
             	
             	String[] array = cmdInput.split(" ");
             	if(array.length == 3)
