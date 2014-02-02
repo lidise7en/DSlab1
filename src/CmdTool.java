@@ -27,6 +27,7 @@ public class CmdTool {
 		String cmdInput = new String();
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         Message msg = null;
+        LogMessage logMsg = null;
         
         while (!cmdInput.equals("quit")) {
         	
@@ -78,11 +79,13 @@ public class CmdTool {
             			msg = this.msgPasser.receive();
             			if(msg == null) {
             				System.out.println("Nothing to pass to Aplication!");
-            			}
-            			else {
-            				System.out.println("We receive");
+            			} else {
+            				logMsg = new LogMessage(((TimeStampedMessage)msg).getMsg(), this.msgPasser.getClockSer().getTs().makeCopy());
+            				TimeStampedMessage newLogMsg = new TimeStampedMessage("logger", "log", logMsg, null);
+    						this.msgPasser.send(newLogMsg);
+          System.out.println("We receive");
 ((TimeStampedMessage)msg).dumpMsg();
-               				this.msgPasser.logEvent(((TimeStampedMessage)msg).getMsg(), this.msgPasser.getClockSer().getTs().makeCopy());
+               				//this.msgPasser.logEvent(((TimeStampedMessage)msg).getMsg(), this.msgPasser.getClockSer().getTs().makeCopy());
             			}
             				
             		}
@@ -90,9 +93,11 @@ public class CmdTool {
 System.out.println("Lamport time " + this.msgPasser.getClockSer().getTs().getLamportClock());
             			this.msgPasser.getClockSer().addTS(this.msgPasser.getLocalName());
 System.out.println("Lamport time " + this.msgPasser.getClockSer().getTs().getLamportClock());
-            			this.msgPasser.logEvent(array[1], this.msgPasser.getClockSer().getTs().makeCopy());
-            		}
-            		else {
+						logMsg = new LogMessage(array[1], this.msgPasser.getClockSer().getTs().makeCopy());
+						TimeStampedMessage newLogMsg = new TimeStampedMessage("logger", "log", logMsg, null);
+						this.msgPasser.send(newLogMsg);
+            			//this.msgPasser.logEvent(array[1], this.msgPasser.getClockSer().getTs().makeCopy());
+            		} else {
             			System.out.println("Invalid Command!");
             		}
             	}
@@ -101,7 +106,11 @@ System.out.println("Lamport time " + this.msgPasser.getClockSer().getTs().getLam
             			TimeStampedMessage newMsg = new TimeStampedMessage(array[1], array[2], array[3], null);
             			this.msgPasser.send(newMsg);
 System.out.println("send TS:" + this.msgPasser.getClockSer().getTs());
-            			this.msgPasser.logEvent(newMsg.getMsg(), this.msgPasser.getClockSer().getTs().makeCopy());
+						
+						logMsg = new LogMessage(newMsg.getMsg(), this.msgPasser.getClockSer().getTs().makeCopy());
+						TimeStampedMessage newLogMsg = new TimeStampedMessage("logger", "log", logMsg, null);
+						this.msgPasser.send(newLogMsg);
+            			//this.msgPasser.logEvent(newMsg.getMsg(), this.msgPasser.getClockSer().getTs().makeCopy());
             		}
             		else {
             			System.out.println("Invalid Command!");

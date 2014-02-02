@@ -20,8 +20,8 @@ public class Logger implements Runnable {
 	 * receive command: receive
 	 */
 	private MessagePasser msgPasser;
-	HashMap<String, ArrayList<LoggedMessage>> eventMap = new HashMap<String, ArrayList<LoggedMessage>>();
-	private ArrayList<LoggedMessage> startMsgs = new ArrayList<LoggedMessage>();
+	HashMap<String, ArrayList<LogMessage>> eventMap = new HashMap<String, ArrayList<LogMessage>>();
+	private ArrayList<LogMessage> startMsgs = new ArrayList<LogMessage>();
 	boolean isLogical;
 	
 	private Logger(MessagePasser msgPasser) {
@@ -35,15 +35,14 @@ public class Logger implements Runnable {
 	
 	@SuppressWarnings("unchecked")
 	private void logNewEvent(TimeStampedMessage msg) {
-		
 		String src;
-		ArrayList<LoggedMessage> eventList = null;
-		LoggedMessage newLoggedMsg = new LoggedMessage(msg);
+		ArrayList<LogMessage> eventList = null;
+		LogMessage newLoggedMsg = new LogMessage(((LogMessage)(msg.getData())));
 		src = msg.getSrc();
 		
 		eventList = eventMap.get(src);
 		if (eventList == null) {
-			eventList = new ArrayList<LoggedMessage>();
+			eventList = new ArrayList<LogMessage>();
 			eventMap.put(src, eventList);
 		}
 		
@@ -53,16 +52,16 @@ public class Logger implements Runnable {
 
 	private void dumpEventMaps() {
 		
-		ArrayList<LoggedMessage> loggedMsgs;
+		ArrayList<LogMessage> loggedMsgs;
 		
 		System.out.println("[LOGGER]: Dump Events Start");
 		
-		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LogMessage>> mapEntry: eventMap.entrySet()) {
 			
 			System.out.println("\t =============== key: " + mapEntry.getKey() + " =======================");
 			loggedMsgs = mapEntry.getValue();
 			
-			for (LoggedMessage loggedMsg : loggedMsgs) {
+			for (LogMessage loggedMsg : loggedMsgs) {
 				//loggedMsg.dumpLoggedMsg();
 				System.out.println(loggedMsg.toString());
 			}
@@ -76,10 +75,10 @@ public class Logger implements Runnable {
 	/*
 	private void generateSequence()
 	{
-		ArrayList<LoggedMessage> loggedMsgs;
-		LoggedMessage firstLoggedMsg;
+		ArrayList<LogMessage> loggedMsgs;
+		LogMessage firstLoggedMsg;
 
-		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LogMessage>> mapEntry: eventMap.entrySet()) {
 			System.out.println("\t [LOGGER]: GenSeq key: " + mapEntry.getKey());
 			loggedMsgs = mapEntry.getValue();
 			
@@ -92,10 +91,10 @@ public class Logger implements Runnable {
 	
 	private void generateSequence()
 	{
-		ArrayList<LoggedMessage> loggedMsgs;
-		LoggedMessage firstLoggedMsg;
+		ArrayList<LogMessage> loggedMsgs;
+		LogMessage firstLoggedMsg;
 
-		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LogMessage>> mapEntry: eventMap.entrySet()) {
 //System.out.println("\t [LOGGER]: GenSeq key: " + mapEntry.getKey());
 			loggedMsgs = mapEntry.getValue();
 
@@ -105,7 +104,7 @@ public class Logger implements Runnable {
 		}
 		
 		/* We have got first level messages now lets get the sequence */
-		for (LoggedMessage msgIter: startMsgs) {
+		for (LogMessage msgIter: startMsgs) {
 			firstLoggedMsg = msgIter;
 			getSequence(firstLoggedMsg);
 		}
@@ -114,10 +113,10 @@ public class Logger implements Runnable {
 	/*
 	private void displaySequence()
 	{
-		ArrayList<LoggedMessage> loggedMsgs;
-		LoggedMessage firstLoggedMsg;
+		ArrayList<LogMessage> loggedMsgs;
+		LogMessage firstLoggedMsg;
 
-		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LogMessage>> mapEntry: eventMap.entrySet()) {
 			
 			System.out.println("\t Disp Seq key: " + mapEntry.getKey());
 			
@@ -130,10 +129,10 @@ public class Logger implements Runnable {
 	*/
 	private void displaySequence()
 	{
-		LoggedMessage firstLoggedMsg;
+		LogMessage firstLoggedMsg;
 		
 		System.out.println("==============================");
-		for (LoggedMessage msgIter: startMsgs) {
+		for (LogMessage msgIter: startMsgs) {
 			firstLoggedMsg = msgIter;
 			displaySequence(firstLoggedMsg);
 		}
@@ -142,12 +141,12 @@ public class Logger implements Runnable {
 	/*
 	private void displayLogicalSequence()
 	{
-		ArrayList<LoggedMessage> loggedMsgs;
+		ArrayList<LogMessage> loggedMsgs;
 
-		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LogMessage>> mapEntry: eventMap.entrySet()) {
 			loggedMsgs = mapEntry.getValue();
 			System.out.println("\n==============================\n");
-			for (LoggedMessage loggedMsg : loggedMsgs) {
+			for (LogMessage loggedMsg : loggedMsgs) {
 				System.out.print(loggedMsg.getTSMsg().getMsgTS().toString() + "==>");
 			}
 		}
@@ -155,16 +154,16 @@ public class Logger implements Runnable {
 	*/
 	private void displayLogicalSequence()
 	{
-		ArrayList<LoggedMessage> loggedMsgs;
+		ArrayList<LogMessage> loggedMsgs;
 
-		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LogMessage>> mapEntry: eventMap.entrySet()) {
 			loggedMsgs = mapEntry.getValue();
 			System.out.println("\n==============================\n");
-			Iterator<LoggedMessage> it = loggedMsgs.iterator();
+			Iterator<LogMessage> it = loggedMsgs.iterator();
 
 			while (it.hasNext()) {
-				LoggedMessage loggedMsg = it.next();
-				System.out.print(loggedMsg.getTSMsg().getMsgTS().toString());
+				LogMessage loggedMsg = it.next();
+				System.out.print(loggedMsg.toString());
 				
 				if (it.hasNext()) {
 					System.out.print(" => ");
@@ -175,15 +174,15 @@ public class Logger implements Runnable {
 		}
 	}
 	
-	private void getSequence(LoggedMessage startEvent)
+	private void getSequence(LogMessage startEvent)
 	{
-		ArrayList<LoggedMessage> loggedMsgs;
-		LoggedMessage nextMsg = null;
+		ArrayList<LogMessage> loggedMsgs;
+		LogMessage nextMsg = null;
 		
 		/*
 		 *  Get next level sequence form all the hash buckets.
 		 */
-		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LogMessage>> mapEntry: eventMap.entrySet()) {
 			
 			nextMsg = getSequenceNextEvent(mapEntry, startEvent);
 			if (nextMsg != null) {
@@ -194,28 +193,28 @@ public class Logger implements Runnable {
 		/* 
 		 * Lets iterate through all the next level events to get there successors
 		 */
-		for (LoggedMessage loggedMsg: startEvent.getNextMsgs()) {
+		for (LogMessage loggedMsg: startEvent.getNextMsgs()) {
 			getSequence(loggedMsg);
 		}
 	}
 
 	/*
-	private void displaySequence(LoggedMessage startEvent)
+	private void displaySequence(LogMessage startEvent)
 	{
 
 		System.out.println(startEvent.toString());
 
-		for (LoggedMessage loggedMsg: startEvent.getNextMsgs()) {
+		for (LogMessage loggedMsg: startEvent.getNextMsgs()) {
 			displaySequence(loggedMsg);
 			System.out.println("===========================================");
 		}
 	}
 	 */
 	
-	private void displaySequence(LoggedMessage startEvent)
+	private void displaySequence(LogMessage startEvent)
 	{
-		Iterator<LoggedMessage> it = startEvent.getNextMsgs().iterator();
-		LoggedMessage loggedMsg;
+		Iterator<LogMessage> it = startEvent.getNextMsgs().iterator();
+		LogMessage loggedMsg;
 		
 		System.out.println(startEvent.toString());
 		
@@ -233,12 +232,12 @@ public class Logger implements Runnable {
 	
 	private void cleanupSequence()
 	{
-		ArrayList<LoggedMessage> loggedMsgs;
+		ArrayList<LogMessage> loggedMsgs;
 
-		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LogMessage>> mapEntry: eventMap.entrySet()) {
 			loggedMsgs = mapEntry.getValue();
 
-			for (LoggedMessage loggedMsg : loggedMsgs) {
+			for (LogMessage loggedMsg : loggedMsgs) {
 				loggedMsg.nextMsgs.clear();
 			}
 		}
@@ -248,12 +247,12 @@ public class Logger implements Runnable {
 	
 	private void cleanupAll()
 	{
-		ArrayList<LoggedMessage> loggedMsgs;
+		ArrayList<LogMessage> loggedMsgs;
 
-		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+		for (Entry<String, ArrayList<LogMessage>> mapEntry: eventMap.entrySet()) {
 			loggedMsgs = mapEntry.getValue();
 
-			for (LoggedMessage loggedMsg : loggedMsgs) {
+			for (LogMessage loggedMsg : loggedMsgs) {
 				loggedMsg.nextMsgs.clear();
 			}
 			
@@ -265,18 +264,18 @@ public class Logger implements Runnable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private LoggedMessage getSequenceNextEvent(Entry<String, ArrayList<LoggedMessage>> mapEntry, LoggedMessage curEvent)
+	private LogMessage getSequenceNextEvent(Entry<String, ArrayList<LogMessage>> mapEntry, LogMessage curEvent)
 	{
-		LoggedMessage retMsg = null;
-		ArrayList<LoggedMessage> loggedMsgs;
+		LogMessage retMsg = null;
+		ArrayList<LogMessage> loggedMsgs;
 		TimeStampedMessage loggedTSMsg = null;
 		TimeStamp loggedTS = null;
-		TimeStamp curTS = curEvent.getTSMsg().getMsgTS();
+		TimeStamp curTS = curEvent.getEventTS();
 		
 		loggedMsgs = mapEntry.getValue();
-		for (LoggedMessage loggedMsg : loggedMsgs) {
+		for (LogMessage loggedMsg : loggedMsgs) {
 			
-			loggedTS = loggedMsg.getTSMsg().getMsgTS();
+			loggedTS = loggedMsg.getEventTS();
 			
 			if (curTS.compare(loggedTS) == TimeStampRelation.lessEqual) {
 				retMsg = loggedMsg;
@@ -288,13 +287,13 @@ public class Logger implements Runnable {
 	}
 	
 	/*
-	private void appendSequenceNextEvent(ArrayList<LoggedMessage> nextMsgs, LoggedMessage nextMsg)
+	private void appendSequenceNextEvent(ArrayList<LogMessage> nextMsgs, LogMessage nextMsg)
 	{	
 		TimeStamp loggedTS = null;
 		TimeStamp nextTS = nextMsg.getTSMsg().getMsgTS();
-		LoggedMessage removeMessage = null;
+		LogMessage removeMessage = null;
 		
-		for (LoggedMessage loggedMsg : nextMsgs) {
+		for (LogMessage loggedMsg : nextMsgs) {
 			
 			loggedTS = loggedMsg.getTSMsg().getMsgTS();
 			if (nextTS.compare(loggedTS) == TimeStampRelation.lessEqual) {
@@ -313,16 +312,16 @@ public class Logger implements Runnable {
 	}
 	*/
 	
-	private void appendSequenceNextEvent(ArrayList<LoggedMessage> nextMsgs, LoggedMessage nextMsg)
+	private void appendSequenceNextEvent(ArrayList<LogMessage> nextMsgs, LogMessage nextMsg)
 	{	
 		TimeStamp loggedTS = null;
-		TimeStamp nextTS = nextMsg.getTSMsg().getMsgTS();
-		LoggedMessage removeMessage = null;
+		TimeStamp nextTS = nextMsg.getEventTS();
+		LogMessage removeMessage = null;
 		boolean isConcurrent = true;
 		
-		for (LoggedMessage loggedMsg : nextMsgs) {
+		for (LogMessage loggedMsg : nextMsgs) {
 			
-			loggedTS = loggedMsg.getTSMsg().getMsgTS();
+			loggedTS = loggedMsg.getEventTS();
 			if (nextTS.compare(loggedTS) == TimeStampRelation.lessEqual) {
 				removeMessage = loggedMsg;
 				break;
@@ -338,9 +337,9 @@ public class Logger implements Runnable {
 		 * We'll add this message only if it is not concurrent with
 		 * existing messages. 
 		 */
-		for (LoggedMessage loggedMsg : nextMsgs) {
+		for (LogMessage loggedMsg : nextMsgs) {
 
-			loggedTS = loggedMsg.getTSMsg().getMsgTS();
+			loggedTS = loggedMsg.getEventTS();
 			if (nextTS.compare(loggedTS) != TimeStampRelation.concurrent) {
 				isConcurrent = false;
 				break;
@@ -452,13 +451,13 @@ public class Logger implements Runnable {
 	
 	public void printVectorConcurrent() {
 		for(String e : this.eventMap.keySet()) {
-			for(LoggedMessage f : this.eventMap.get(e)) {
-				TimeStamp ts = f.msg.getMsgTS();
+			for(LogMessage f : this.eventMap.get(e)) {
+				TimeStamp ts = f.getEventTS();
 				//System.out.println("\n" + f.msg.getMsgTS().toString() + " " + "concurrent messages : ");
 				for(String str : this.eventMap.keySet()) {
-					for(LoggedMessage lm : this.eventMap.get(str)) {
-						if(ts.compare(lm.msg.getMsgTS()) == TimeStampRelation.concurrent) {
-							System.out.println(lm.msg.getMsgTS().toString() + " || " + f.msg.getMsgTS().toString());
+					for(LogMessage lm : this.eventMap.get(str)) {
+						if(ts.compare(lm.getEventTS()) == TimeStampRelation.concurrent) {
+							System.out.println(lm.toString() + " || " + f.toString());
 						}
 					}
 				}
@@ -469,13 +468,13 @@ public class Logger implements Runnable {
 	
 	public void printLogicalConcurrent() {
 		for(String e : this.eventMap.keySet()) {
-			for(LoggedMessage f : this.eventMap.get(e)) {
-				TimeStamp ts = f.msg.getMsgTS();
+			for(LogMessage f : this.eventMap.get(e)) {
+				TimeStamp ts = f.getEventTS();
 				//System.out.println("\n" + f.msg.getMsgTS().toString() + " " + "concurrent messages : ");
 				for(String str : this.eventMap.keySet()) {
-					for(LoggedMessage lm : this.eventMap.get(str)) {
+					for(LogMessage lm : this.eventMap.get(str)) {
 						if(e.equals(str) == false) {
-							System.out.println(e + ":" + f.msg.getMsgTS().toString() + " || " + str + ":" + lm.msg.getMsgTS().toString());
+							System.out.println(e + ":" + f.toString() + " || " + str + ":" + lm.toString());
 						}
 					}
 				}

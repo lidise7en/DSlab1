@@ -285,12 +285,12 @@ public class MessagePasser {
 		TimeStampedMessage msg = (TimeStampedMessage)message;
 		
 		/* Only for non log messages we will update the TS */
-		if (!message.getKind().equals("log")) { 
+		//if (!message.getKind().equals("log")) { 
 			/* fill the message with new timestamp */
 			this.clockSer.addTS(this.localName);
 			msg.setMsgTS(this.clockSer.getTs().makeCopy());
 System.out.println("TS add by 1");
-		}
+		//}
 		
 		/* end fill*/
 		String dest = msg.getDest();
@@ -389,6 +389,7 @@ System.out.println("msgTS in doSend" + msg.getMsgTS().toString());
 		return null;
 	}
 	
+	/*
 	public void logEvent(String msg, TimeStamp ts)
 	{
 		TimeStampedMessage newTsMsg;
@@ -401,7 +402,7 @@ System.out.println("TS entered into logEvent" + ts.toString());
 		newTsMsg = new TimeStampedMessage(loggerName, "log", msg, ts);
 		this.send(newTsMsg);
 	}
-	
+	*/
 	public Rule matchRule(Message message, RuleType type) {
 		List<Rule> rules = null;
 		
