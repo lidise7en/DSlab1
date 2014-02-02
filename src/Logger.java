@@ -139,16 +139,39 @@ public class Logger implements Runnable {
 		}
 	}
 	
+	/*
 	private void displayLogicalSequence()
 	{
 		ArrayList<LoggedMessage> loggedMsgs;
 
 		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
 			loggedMsgs = mapEntry.getValue();
-			System.out.println("==============================");
+			System.out.println("\n==============================\n");
 			for (LoggedMessage loggedMsg : loggedMsgs) {
-				System.out.println(loggedMsg.getTSMsg().getMsgTS().toString());
+				System.out.print(loggedMsg.getTSMsg().getMsgTS().toString() + "==>");
 			}
+		}
+	}
+	*/
+	private void displayLogicalSequence()
+	{
+		ArrayList<LoggedMessage> loggedMsgs;
+
+		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
+			loggedMsgs = mapEntry.getValue();
+			System.out.println("\n==============================\n");
+			Iterator<LoggedMessage> it = loggedMsgs.iterator();
+
+			while (it.hasNext()) {
+				LoggedMessage loggedMsg = it.next();
+				System.out.print(loggedMsg.getTSMsg().getMsgTS().toString());
+				
+				if (it.hasNext()) {
+					System.out.print(" => ");
+				} else {
+					System.out.print("\n");
+				}
+			}	 
 		}
 	}
 	
@@ -188,6 +211,7 @@ public class Logger implements Runnable {
 		}
 	}
 	 */
+	
 	private void displaySequence(LoggedMessage startEvent)
 	{
 		Iterator<LoggedMessage> it = startEvent.getNextMsgs().iterator();
@@ -197,11 +221,12 @@ public class Logger implements Runnable {
 		
 		while (it.hasNext()) {
 			loggedMsg = it.next();
+			System.out.print(" => ");
 			displaySequence(loggedMsg);
 			System.out.println("===========================================");
 			if (it.hasNext()) {
 				/* We are changing the path in the sequence print parent node again */
-				System.out.println(startEvent.toString());
+				System.out.print(startEvent.toString());
 			}
 		}
 	}
@@ -387,8 +412,12 @@ public class Logger implements Runnable {
             	}
             	
             } else if (cmdInput.equals("concurrent")) {
-            	
-            	this.printConcurrent();
+
+            	if (this.isLogical == false) {
+            		this.printVectorConcurrent();
+            	} else {
+            		this.printLogicalConcurrent();
+            	}
             	
             } else if (cmdInput.equals("cleanup")) {
 //System.out.println("we clean up the logger");
@@ -421,15 +450,32 @@ public class Logger implements Runnable {
         }
 	}
 	
-	public void printConcurrent() {
+	public void printVectorConcurrent() {
 		for(String e : this.eventMap.keySet()) {
 			for(LoggedMessage f : this.eventMap.get(e)) {
 				TimeStamp ts = f.msg.getMsgTS();
-				System.out.println("\n" + f.msg.getMsgTS().toString() + " " + "concurrent messages : ");
+				//System.out.println("\n" + f.msg.getMsgTS().toString() + " " + "concurrent messages : ");
 				for(String str : this.eventMap.keySet()) {
 					for(LoggedMessage lm : this.eventMap.get(str)) {
 						if(ts.compare(lm.msg.getMsgTS()) == TimeStampRelation.concurrent) {
-							System.out.println(lm.msg.getMsgTS().toString());
+							System.out.println(lm.msg.getMsgTS().toString() + " || " + f.msg.getMsgTS().toString());
+						}
+					}
+				}
+				System.out.println("====================================");
+			}
+		}
+	}
+	
+	public void printLogicalConcurrent() {
+		for(String e : this.eventMap.keySet()) {
+			for(LoggedMessage f : this.eventMap.get(e)) {
+				TimeStamp ts = f.msg.getMsgTS();
+				//System.out.println("\n" + f.msg.getMsgTS().toString() + " " + "concurrent messages : ");
+				for(String str : this.eventMap.keySet()) {
+					for(LoggedMessage lm : this.eventMap.get(str)) {
+						if(e.equals(str) == false) {
+							System.out.println(e + ":" + f.msg.getMsgTS().toString() + " || " + str + ":" + lm.msg.getMsgTS().toString());
 						}
 					}
 				}
