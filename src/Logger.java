@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Iterator;
 
 
 public class Logger implements Runnable {
@@ -95,12 +96,12 @@ public class Logger implements Runnable {
 		LoggedMessage firstLoggedMsg;
 
 		for (Entry<String, ArrayList<LoggedMessage>> mapEntry: eventMap.entrySet()) {
-System.out.println("\t [LOGGER]: GenSeq key: " + mapEntry.getKey());
+//System.out.println("\t [LOGGER]: GenSeq key: " + mapEntry.getKey());
 			loggedMsgs = mapEntry.getValue();
 
 			firstLoggedMsg = loggedMsgs.get(0);
 			appendSequenceNextEvent(startMsgs, firstLoggedMsg);
-System.out.println("[LOGGER]: Genseq key: " + mapEntry.getKey() + " DONE");
+//System.out.println("[LOGGER]: Genseq key: " + mapEntry.getKey() + " DONE");
 		}
 		
 		/* We have got first level messages now lets get the sequence */
@@ -130,7 +131,8 @@ System.out.println("[LOGGER]: Genseq key: " + mapEntry.getKey() + " DONE");
 	private void displaySequence()
 	{
 		LoggedMessage firstLoggedMsg;
-
+		
+		System.out.println("==============================");
 		for (LoggedMessage msgIter: startMsgs) {
 			firstLoggedMsg = msgIter;
 			displaySequence(firstLoggedMsg);
@@ -174,17 +176,33 @@ System.out.println("[LOGGER]: Genseq key: " + mapEntry.getKey() + " DONE");
 		}
 	}
 
+	/*
 	private void displaySequence(LoggedMessage startEvent)
 	{
-		
+
 		System.out.println(startEvent.toString());
-		
-		/* 
-		 * Lets iterate through all the next level events to get there successors
-		 */
+
 		for (LoggedMessage loggedMsg: startEvent.getNextMsgs()) {
 			displaySequence(loggedMsg);
 			System.out.println("===========================================");
+		}
+	}
+	 */
+	private void displaySequence(LoggedMessage startEvent)
+	{
+		Iterator<LoggedMessage> it = startEvent.getNextMsgs().iterator();
+		LoggedMessage loggedMsg;
+		
+		System.out.println(startEvent.toString());
+		
+		while (it.hasNext()) {
+			loggedMsg = it.next();
+			displaySequence(loggedMsg);
+			System.out.println("===========================================");
+			if (it.hasNext()) {
+				/* We are changing the path in the sequence print parent node again */
+				System.out.println(startEvent.toString());
+			}
 		}
 	}
 	
@@ -287,7 +305,7 @@ System.out.println("[LOGGER]: Genseq key: " + mapEntry.getKey() + " DONE");
 		}
 		
 		if (removeMessage != null) {
-			System.out.println("[LOGGER] REMOVE msg: " + removeMessage.getTSMsg().getMsgTS().toString());
+//System.out.println("[LOGGER] REMOVE msg: " + removeMessage.getTSMsg().getMsgTS().toString());
 			nextMsgs.remove(removeMessage);
 		}
 		
@@ -305,10 +323,10 @@ System.out.println("[LOGGER]: Genseq key: " + mapEntry.getKey() + " DONE");
 		}
 		
 		if (isConcurrent == true) {
-			System.out.println("[LOGGER] APPEND msg: " + nextMsg.getTSMsg().getMsgTS().toString());
+//System.out.println("[LOGGER] APPEND msg: " + nextMsg.getTSMsg().getMsgTS().toString());
 			nextMsgs.add(nextMsg);
 		} else {
-			System.out.println("[LOGGER] NO APPEND msg: " + nextMsg.getTSMsg().getMsgTS().toString());
+//System.out.println("[LOGGER] NO APPEND msg: " + nextMsg.getTSMsg().getMsgTS().toString());
 		}
 		
 		return;
@@ -373,7 +391,7 @@ System.out.println("[LOGGER]: Genseq key: " + mapEntry.getKey() + " DONE");
             	this.printConcurrent();
             	
             } else if (cmdInput.equals("cleanup")) {
-            	System.out.println("we clean up the logger");
+//System.out.println("we clean up the logger");
             	this.msgPasser.cleanUp();
             	this.cleanupAll();
 

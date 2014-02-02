@@ -7,11 +7,10 @@ import java.util.List;
  */
 
 public class Config {
-
 	List<SocketInfo> configuration;
 	List<Rule> sendRules;
 	List<Rule> receiveRules;
-	boolean isLogical = false;
+	boolean isLogical;
 	public Config() {
 	}
 	
@@ -46,6 +45,6 @@ public class Config {
 	@Override
 	public String toString() {
 		return "Config [configuration=" + configuration + ", sendRules="
-				+ sendRules + ", receiveRules=" + receiveRules + "]";
+				+ sendRules + ", receiveRules=" + receiveRules + ", isLogical=" + isLogical + "]";
 	}
 }

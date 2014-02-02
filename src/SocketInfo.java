@@ -8,6 +8,7 @@ public class SocketInfo {
 	private String name;
 	private String ip;
 	int port;
+	private String clockType = "logical"; // Workaround
 	
 	public SocketInfo() {
 		
@@ -19,10 +20,25 @@ public class SocketInfo {
 		this.port = port;
 	}
 	
+	public SocketInfo(String name, String ip, int port, String clockType) {
+		this.name = name;
+		this.ip = ip;
+		this.port = port;
+		this.clockType = clockType;
+	}
+	
+	public String getClockType() {
+		return this.clockType;
+	}
+	
 	public String getName() {
 		return name;
 	}
 
+	public void setClockType(String clockType) {
+		this.clockType = clockType;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -46,6 +62,6 @@ public class SocketInfo {
 	@Override
 	public String toString() {
 		return "SocketInfo [name=" + name + ", ip=" + ip + ", port=" + port
-				+ "]";
+				+ ", clockType=" + clockType + "]";
 	}
 }

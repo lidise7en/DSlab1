@@ -82,7 +82,7 @@ public class CmdTool {
             			else {
             				System.out.println("We receive");
 ((TimeStampedMessage)msg).dumpMsg();
-               				this.msgPasser.logEvent(msg.toString(), this.msgPasser.getClockSer().getTs().makeCopy());
+               				this.msgPasser.logEvent(((TimeStampedMessage)msg).getMsg(), this.msgPasser.getClockSer().getTs().makeCopy());
             			}
             				
             		}

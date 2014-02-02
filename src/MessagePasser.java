@@ -457,10 +457,28 @@ System.out.println("TS entered into logEvent" + ts.toString());
 	private void parseConfig() throws FileNotFoundException {
 	    InputStream input = new FileInputStream(new File(configFilename));
         Constructor constructor = new Constructor(Config.class);
+        SocketInfo mySocketInfo;
 	    Yaml yaml = new Yaml(constructor);
 	    
 	    /* SnakeYAML will parse and populate the Config object for us */
 	    config = (Config) yaml.load(input);
+	    
+	    /* XXX: Assigning config.isLogical based on 
+	     * SocketInfo data is a big hack. I could not make it work 
+	     * with normal yaml.load, hence had to go with this hack. 
+	     */
+	    mySocketInfo = config.getConfigSockInfo(localName);
+	    if(mySocketInfo == null) {
+	    	/*** ERROR ***/
+	    	System.out.println("The local name is not correct.");
+	    	System.exit(0);
+	    }
+	    
+	    if (mySocketInfo.getClockType().equals("logical")) {
+	    	config.isLogical = true;
+	    } else {
+	    	config.isLogical = false;
+	    }
 	}
 
 	public void closeAllSockets() throws IOException {
