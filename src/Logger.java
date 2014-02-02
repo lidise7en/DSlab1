@@ -323,8 +323,8 @@ System.out.println("[LOGGER]: Genseq key: " + mapEntry.getKey() + " DONE");
 		while (true) {
 			msg = (TimeStampedMessage)(this.msgPasser.receiveLogger());
     		if(msg != null) {
-    			System.out.println("[LOGGER]: Received a new message");
-    			msg.dumpMsg();
+//System.out.println("[LOGGER]: Received a new message");
+//msg.dumpMsg();
     			this.logNewEvent(msg);
     		}
 		}

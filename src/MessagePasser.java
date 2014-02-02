@@ -353,8 +353,8 @@ System.out.println("msgTS in doSend" + msg.getMsgTS().toString());
 				Message popMsg = recvQueue.remove();
 				/* add ClockService */
 				TimeStampedMessage msg = (TimeStampedMessage)popMsg;
-System.out.println("new Debug sentence");
-msg.dumpMsg();
+//System.out.println("new Debug sentence");
+//msg.dumpMsg();
 				this.clockSer.updateTS(msg.getMsgTS());
 				this.clockSer.addTS(this.localName);
 				/* */
@@ -376,8 +376,8 @@ msg.dumpMsg();
 				Message popMsg = recvQueue.remove();
 				/* add ClockService */
 				TimeStampedMessage msg = (TimeStampedMessage)popMsg;
-System.out.println("new Debug sentence");
-msg.dumpMsg();
+//System.out.println("new Debug sentence");
+//msg.dumpMsg();
 //				this.clockSer.updateTS(msg.getMsgTS());
 //				this.clockSer.addTS(this.localName);
 				/* */
