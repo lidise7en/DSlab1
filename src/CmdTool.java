@@ -107,7 +107,7 @@ System.out.println("Lamport time " + this.msgPasser.getClockSer().getTs().getLam
             			this.msgPasser.send(newMsg);
 System.out.println("send TS:" + this.msgPasser.getClockSer().getTs());
 						
-						logMsg = new LogMessage(newMsg.getMsg(), this.msgPasser.getClockSer().getTs().makeCopy());
+						logMsg = new LogMessage(newMsg.getMsg(), newMsg.getMsgTS().makeCopy());
 						TimeStampedMessage newLogMsg = new TimeStampedMessage("logger", "log", logMsg, null);
 						this.msgPasser.send(newLogMsg);
             			//this.msgPasser.logEvent(newMsg.getMsg(), this.msgPasser.getClockSer().getTs().makeCopy());

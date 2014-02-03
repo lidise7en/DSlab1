@@ -225,7 +225,11 @@ public class MessagePasser {
 		 * Check message against sendRules.
 		 * Finally, send the message using sockets.
 		 */
-		
+		/* update the timestamp */
+		this.clockSer.addTS(this.localName);
+		((TimeStampedMessage)message).setMsgTS(this.clockSer.getTs().makeCopy());
+System.out.println("TS add by 1");
+
 		try {
 			parseConfig();
 		} catch (FileNotFoundException e) {
@@ -247,6 +251,10 @@ public class MessagePasser {
 				
 				/* Send 'message' and 'dupMsg' */
 				doSend(message);
+				/* update the timestamp */
+				this.clockSer.addTS(this.localName);
+				((TimeStampedMessage)dupMsg).setMsgTS(this.clockSer.getTs().makeCopy());
+System.out.println("TS add by 1");
 				doSend(dupMsg);
 				
 				/* We need to send delayed messages after new message.
@@ -284,13 +292,7 @@ public class MessagePasser {
 		
 		TimeStampedMessage msg = (TimeStampedMessage)message;
 		
-		/* Only for non log messages we will update the TS */
-		//if (!message.getKind().equals("log")) { 
-			/* fill the message with new timestamp */
-			this.clockSer.addTS(this.localName);
-			msg.setMsgTS(this.clockSer.getTs().makeCopy());
-System.out.println("TS add by 1");
-		//}
+
 		
 		/* end fill*/
 		String dest = msg.getDest();
