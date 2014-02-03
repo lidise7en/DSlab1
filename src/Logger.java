@@ -506,7 +506,7 @@ public class Logger implements Runnable {
 				for(String str : this.eventMap.keySet()) {
 					for(LogMessage lm : this.eventMap.get(str)) {
 						if(ts.compare(lm.getEventTS()) == TimeStampRelation.concurrent) {
-							System.out.println(lm.toString() + " || " + f.toString());
+							System.out.println(lm.getEventTS().toString() + " || " + f.getEventTS().toString());
 						}
 					}
 				}
@@ -523,7 +523,8 @@ public class Logger implements Runnable {
 				for(String str : this.eventMap.keySet()) {
 					for(LogMessage lm : this.eventMap.get(str)) {
 						if(e.equals(str) == false) {
-							System.out.println(e + ":" + f.toString() + " || " + str + ":" + lm.toString());
+							System.out.println(e + ":" + f.getEventTS().toString() + " || " + 
+						str + ":" + lm.getEventTS().toString());
 						}
 					}
 				}

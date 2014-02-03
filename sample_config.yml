@@ -7,22 +7,25 @@
 # The local node’s name is included in this list  
 configuration :   
     - name : p1 
-      ip: 128.237.208.219   
+      ip: 128.237.210.21   
       port : 49996
+      clockType: logical
     - name : p2 
-      ip : 128.237.208.219  
+      ip : 128.237.210.21  
       port : 42558   
-
+      clockType: logical
     - name : p3  
-      ip : 128.237.208.219    
+      ip : 128.237.210.21    
       port : 50003  
+      clockType: logical
     - name : p4
-      ip : 128.237.208.219   
+      ip : 128.237.210.21   
       port : 59877  
+      clockType: logical
     - name : logger
-      ip : localhost
+      ip : 128.237.210.21
       port : 61225
-
+      clockType: logical
 sendRules :
     - action : delay
       dest : p4
