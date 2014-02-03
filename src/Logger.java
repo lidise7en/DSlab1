@@ -46,9 +46,58 @@ public class Logger implements Runnable {
 			eventMap.put(src, eventList);
 		}
 		
-		eventList.add(newLoggedMsg);
+		listAddEvent(eventList, newLoggedMsg);
+		/*
+		if (checkDup(eventList, newLoggedMsg) == false) {
+			eventList.add(newLoggedMsg);
+		} else {
+			System.out.println("Received a dup event: " + 
+								newLoggedMsg.toString() + " from: " + src);
+		}
+		*/
 	}
 	
+	private boolean listAddEvent(ArrayList<LogMessage> eventList, LogMessage newEvent)
+	{
+		boolean isSuccess = true;
+		int index = 0;
+		
+		if (eventList.isEmpty()) {
+			/* Empty list why check anything */
+			eventList.add(newEvent);
+			return isSuccess;
+		}
+		
+		for (LogMessage loggedEvent : eventList) {
+
+			if ((loggedEvent.getEventTS().compare(newEvent.getEventTS()) == TimeStampRelation.equal)) {
+				System.out.println("[LOGGER]: Received duped event: " + newEvent.toString());
+				isSuccess = false;
+				return isSuccess;
+			} else if ((loggedEvent.getEventTS().compare(newEvent.getEventTS()) == TimeStampRelation.lessEqual)) {
+				index++;
+			}
+		}
+		
+		eventList.add(index, newEvent);
+		
+		return isSuccess;
+	}
+	
+	private boolean checkDup(ArrayList<LogMessage> eventList, LogMessage newEvent) 
+	{
+		boolean isDup = false;
+		
+		for (LogMessage loggedEvent : eventList) {
+			
+			if ((loggedEvent.getEventTS().compare(newEvent.getEventTS()) == TimeStampRelation.equal)) {
+				isDup = true;
+				break;
+			}
+		}
+		
+		return isDup;
+	}
 
 	private void dumpEventMaps() {
 		
